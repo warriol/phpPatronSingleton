@@ -1,0 +1,15 @@
+Options -Indexes
+
+RewriteEngine on
+RewriteBase /
+
+RewriteRule ^/$ index.php [L]
+
+<Files ~ "^\.(htaccess|htpasswd)$">
+	deny from all
+</Files>
+
+<FilesMatch "config\.php|class\.php\.php|app\.php">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
