@@ -40,20 +40,19 @@
  *
  */
 
-require_once '../config/Database.php';
-require_once '../models/User.php';
-
 class UserController
 {
     private $db;
     private $requestMethod;
     private $userId;
+    private $user;
 
     public function __construct($requestMethod, $userId = null)
     {
         $this->db = Database::getInstance()->getConnection();
         $this->requestMethod = $requestMethod;
         $this->userId = $userId;
+        $this->user = new User($this->db);
     }
 
     public function processRequest()
@@ -88,42 +87,43 @@ class UserController
 
     private function getAllUsers()
     {
-        $query = 'SELECT * FROM users';
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->user->getAll();
+        $users = $result->fetchAll(PDO::FETCH_ASSOC);
 
         $response['status_code_header'] = 'HTTP/1.1 200 OK';
-        $response['body'] = json_encode($result);
+        $response['body'] = json_encode($users);
         return $response;
     }
 
     private function getUser($id)
     {
-        $query = 'SELECT * FROM users WHERE id = :id';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->user->getById($id);
+        $user = $result->fetch(PDO::FETCH_ASSOC);
 
-        if (!$result) {
+        if (!$user) {
             return $this->notFoundResponse();
         }
 
         $response['status_code_header'] = 'HTTP/1.1 200 OK';
-        $response['body'] = json_encode($result);
+        $response['body'] = json_encode($user);
         return $response;
     }
 
     private function createUser()
     {
         $input = (array)json_decode(file_get_contents('php://input'), TRUE);
-        $query = 'INSERT INTO users (name, email) VALUES (:name, :email)';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':name', $input['name']);
-        $stmt->bindParam(':email', $input['email']);
 
-        if ($stmt->execute()) {
+        if (!$this->validateUser($input)) {
+            return $this->unprocessableEntityResponse();
+        }
+
+        $this->user->first_name = $input['first_name'];
+        $this->user->last_name = $input['last_name'];
+        $this->user->email = $input['email'];
+        $this->user->phone = $input['phone'];
+        $this->user->password = password_hash($input['password'], PASSWORD_BCRYPT);
+
+        if ($this->user->create()) {
             $response['status_code_header'] = 'HTTP/1.1 201 Created';
             $response['body'] = json_encode(['message' => 'User created successfully']);
         } else {
@@ -134,14 +134,24 @@ class UserController
 
     private function updateUser($id)
     {
-        $input = (array)json_decode(file_get_contents('php://input'), TRUE);
-        $query = 'UPDATE users SET name = :name, email = :email WHERE id = :id';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':name', $input['name']);
-        $stmt->bindParam(':email', $input['email']);
-        $stmt->bindParam(':id', $id);
+        $result = $this->user->getById($id);
+        if ($result->rowCount() == 0) {
+            return $this->notFoundResponse();
+        }
 
-        if ($stmt->execute()) {
+        $input = (array)json_decode(file_get_contents('php://input'), TRUE);
+
+        if (!$this->validateUser($input)) {
+            return $this->unprocessableEntityResponse();
+        }
+
+        $this->user->first_name = $input['first_name'];
+        $this->user->last_name = $input['last_name'];
+        $this->user->email = $input['email'];
+        $this->user->phone = $input['phone'];
+        $this->user->password = password_hash($input['password'], PASSWORD_BCRYPT);
+
+        if ($this->user->update($id)) {
             $response['status_code_header'] = 'HTTP/1.1 200 OK';
             $response['body'] = json_encode(['message' => 'User updated successfully']);
         } else {
@@ -152,17 +162,27 @@ class UserController
 
     private function deleteUser($id)
     {
-        $query = 'DELETE FROM users WHERE id = :id';
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $result = $this->user->getById($id);
+        if ($result->rowCount() == 0) {
+            return $this->notFoundResponse();
+        }
 
-        if ($stmt->execute()) {
+        if ($this->user->delete($id)) {
             $response['status_code_header'] = 'HTTP/1.1 200 OK';
             $response['body'] = json_encode(['message' => 'User deleted successfully']);
         } else {
             $response = $this->notFoundResponse();
         }
         return $response;
+    }
+
+    private function validateUser($input)
+    {
+        if (!isset($input['first_name']) || !isset($input['last_name']) || !isset($input['email']) || !isset($input['phone']) || !isset($input['password'])) {
+            return false;
+        }
+
+        return true;
     }
 
     private function notFoundResponse()

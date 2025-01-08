@@ -1,4 +1,16 @@
+Options -Indexes
+
 RewriteEngine On
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
+
+<Files ~ "^\.(htaccess|htpasswd)$">
+	deny from all
+</Files>
+
+<FilesMatch "config\.php|controllers\.php\.php|models\.php">
+  Order allow,deny
+  Deny from all
+</FilesMatch>

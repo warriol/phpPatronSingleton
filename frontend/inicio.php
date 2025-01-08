@@ -3,27 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
+    <title>Inicio de sesión</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<h1>Registro de Usuario</h1>
-<form id="registerForm">
-    <div>
-        <label for="first_name">Nombre:</label>
-        <input type="text" id="first_name" name="first_name" required>
-    </div>
-    <div>
-        <label for="last_name">Apellido:</label>
-        <input type="text" id="last_name" name="last_name" required>
-    </div>
+<h1>Inicio de sesión</h1>
+<form id="loginForm">
     <div>
         <label for="email">Correo Electrónico:</label>
         <input type="email" id="email" name="email" required>
-    </div>
-    <div>
-        <label for="phone">Teléfono:</label>
-        <input type="text" id="phone" name="phone" required>
     </div>
     <div>
         <label for="password">Contraseña:</label>
