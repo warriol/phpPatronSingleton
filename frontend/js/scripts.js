@@ -33,6 +33,28 @@ document.getElementById('registerForm').addEventListener('submit', function(even
 });
 
 /**
+ * listar usuarios
+ */
+document.getElementById('listUsersButton').addEventListener('click', function() {
+    fetch('http://localhost/backend/index.php')
+        .then(response => response.json())
+        .then(data => {
+            const usersTableBody = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+            usersTableBody.innerHTML = ''; // Limpiar la tabla antes de agregar nuevos datos
+
+            data.forEach(user => {
+                const row = usersTableBody.insertRow();
+                row.insertCell(0).textContent = user.id;
+                row.insertCell(1).textContent = user.first_name;
+                row.insertCell(2).textContent = user.last_name;
+                row.insertCell(3).textContent = user.email;
+                row.insertCell(4).textContent = user.phone;
+            });
+        })
+        .catch(error => console.error('Error:', error));
+});
+
+/**
  * inicio de sesion
  */
 document.getElementById('loginForm').addEventListener('submit', function (event){
@@ -45,9 +67,18 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
 
     fetch( 'http://localhost/backend/auth.php', {
         method: 'POST',
-
-        /**
-         * continuar con los parametros para enviar datos del formulario al backend y lugeo recibirlos
-         */
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
     })
-})
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                alert(data.message);
+            } else {
+                alert('Credenciales incorrectas');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});

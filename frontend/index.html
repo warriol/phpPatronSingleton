@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<br>
 <h1>Registro de Usuario</h1>
+<br>
 <form id="registerForm">
     <div>
         <label for="first_name">Nombre:</label>
@@ -31,6 +33,26 @@
     </div>
     <button type="submit">Registrar</button>
 </form>
+<br>
+<hr>
+<br>
+<h2>Lista de Usuarios</h2>
+<br>
+<button id="listUsersButton">Listar Usuarios</button>
+<table id="usersTable">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Correo Electrónico</th>
+        <th>Teléfono</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Aquí se mostrarán los usuarios -->
+    </tbody>
+</table>
 
 <script src="js/scripts.js"></script>
 </body>

@@ -9,6 +9,19 @@
  * La respuesta se devuelve en formato JSON.
  */
 
+require_once __DIR__ . '/config/cargarEnv.php';
+
+
+if (getenv('ENVIRONMENT') === false ) {
+    echo "La variable de entorno no se iniciaron correctamente, esto puede afectar el funcionamiento del sitio, comuniquese con un administrador.";
+    die();
+} else {
+    if (getenv('HOSTNAMET') === false || getenv('HOSTNAMEP') === false) {
+        echo "La variable de entorno no se iniciaron correctamente, esto puede afectar el funcionamiento del sitio, comuniquese con un administrador.";
+        die();
+    }
+}
+
 require_once './controllers/UserController.php';
 require_once './config/Database.php';
 require_once './models/User.php';
