@@ -22,6 +22,7 @@ if (getenv('ENVIRONMENT') === false ) {
     }
 }
 
+
 // Establecer las cabeceras necesarias para CORS
 //header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -33,7 +34,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 header("Content-Type: application/json; charset=UTF-8");
 
 $requestMethod = $_SERVER["REQUEST_METHOD"];
-$userId = isset($_GET['id']) ? $_GET['id'] : null;
 
-$controller = new UserController($requestMethod, $userId);
+$controller = new AuthController($requestMethod);
 $controller->processRequest();
+
+/**
+ * probando JWT
+ */
+/*
+require_once __DIR__ . '/autoload.php';
+
+$rateLimiter = new RateLimiter(100, 3600); // 100 requests per hour
+$ip = $_SERVER['REMOTE_ADDR'];
+
+if (!$rateLimiter->isAllowed($ip)) {
+    http_response_code(429);
+    echo json_encode(['error' => 'Too many requests']);
+    exit;
+}
+
+$jwt = JWT::encode(['user_id' => 1, 'exp' => time() + 3600]);
+$decoded = JWT::decode($jwt);
+
+$email = InputValidator::validateEmail($_POST['email']);
+$sanitizedString = InputValidator::sanitizeString($_POST['name']);
+ */

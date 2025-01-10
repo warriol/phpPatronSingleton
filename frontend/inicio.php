@@ -84,6 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['texto'])) {
     <h3>Texto desencriptado:</h3>
     <p><?php echo htmlspecialchars($textoNormal); ?></p>
 <?php endif; ?>
-<script src="js/scripts.js"></script>
+<script src="js/scriptsAuth.js"></script>
 </body>
 </html>

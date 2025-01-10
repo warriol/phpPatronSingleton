@@ -41,6 +41,15 @@ class User
         return $stmt;
     }
 
+    public function getUserByEmail($email)
+    {
+        $query = 'SELECT * FROM ' . $this->table . ' WHERE email = :email';
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function create()
     {
         $query = 'INSERT INTO ' . $this->table . ' (first_name, last_name, email, phone, password) VALUES (:first_name, :last_name, :email, :phone, :password)';
@@ -87,4 +96,5 @@ class User
         }
         return false;
     }
+
 }

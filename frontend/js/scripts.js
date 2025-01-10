@@ -17,14 +17,13 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     fetch('http://localhost/backend/index.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer <token>',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     })
         .then(response => response.json())
-        .then(data => console.log(data))
         .then(data => {
+            console.log(data);
             if (data.message) {
                 alert(data.message);
             } else {
@@ -56,31 +55,3 @@ document.getElementById('listUsersButton').addEventListener('click', function() 
         .catch(error => console.error('Error:', error));
 });
 
-/**
- * inicio de sesion
- */
-document.getElementById('loginForm').addEventListener('submit', function (event){
-    event.preventDefault();
-
-    const formData = {
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
-    };
-
-    fetch( 'http://localhost/backend/auth.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                alert(data.message);
-            } else {
-                alert('Credenciales incorrectas');
-            }
-        })
-        .catch(error => console.error('Error:', error));
-});
