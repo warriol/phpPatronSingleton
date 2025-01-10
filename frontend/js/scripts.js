@@ -17,11 +17,13 @@ document.getElementById('registerForm').addEventListener('submit', function(even
     fetch('http://localhost/backend/index.php', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer <token>',
         },
         body: JSON.stringify(formData)
     })
         .then(response => response.json())
+        .then(data => console.log(data))
         .then(data => {
             if (data.message) {
                 alert(data.message);

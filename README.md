@@ -8,19 +8,24 @@ Incorporación del patrón singleton en php
     │
     ├── backend/
     │   ├── config/
-    │   │   └── Database.php
+    │   │   ├── Database.php
+    │   │   └── cargarEnv.php
     │   ├── controllers/
     │   │   └── UserController.php
     │   ├── models/
     │   │   └── User.php
+    │   ├── sql/
+    │   │   └── users.sql
     │   ├── index.php
+    │   ├── .env
     │   └── .htaccess
     ├── frontend/
     │   ├── css/
     │   │   └── styles.css
     │   ├── js/
     │   │   └── scripts.js
-    │   └── index.html
+    │   ├── index.html
+    │   └── inicio.php
     └── README.md
     ```
 
@@ -45,6 +50,6 @@ Este proyecto implementa una API en PHP utilizando el patrón Singleton para la 
 ## Cómo Empezar
 
 1. Clona el repositorio.
-2. Configura tu entorno de base de datos y actualiza las credenciales en `config/Database.php`.
+2. Configura tu entorno de base de datos y actualiza las credenciales en `.env`.
 3. Accede al frontend abriendo `frontend/index.html` en tu navegador.
 4. Realiza solicitudes a la API a través del endpoint `backend/index.php`.

@@ -40,19 +40,20 @@
  *
  */
 
-class UserController
+class UserController extends Conexion
 {
-    private $db;
+    private $conn;
     private $requestMethod;
     private $userId;
     private $user;
 
     public function __construct($requestMethod, $userId = null)
     {
-        $this->db = Database::getInstance()->getConnection();
+        parent::__construct();
+        $this->conn = $this->db;
         $this->requestMethod = $requestMethod;
         $this->userId = $userId;
-        $this->user = new User($this->db);
+        $this->user = new User($this->conn);
     }
 
     public function processRequest()
